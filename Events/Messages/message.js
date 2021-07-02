@@ -5,10 +5,8 @@ module.exports = async (bot, message) => {
   
   if(message.channel.type === 'dm') return bot.emit('directMessage', message)
 
-  const settings = await bot.getGuild(message.guild);
-
   //constantes
-  const prefix = settings.prefix;
+  const prefix = bot.config.PREFIX;
   const args = message.content.slice(prefix.length).split(/ +/);
   if(!message.content.startsWith(prefix)) return;
 
@@ -66,7 +64,7 @@ module.exports = async (bot, message) => {
   
 
   if(!message.member.permissions.has(command.help.userPerms)) return message.channel.send(embedError("Une ou plusieurs permissions manquantes !", `Certaines permissions semblent manquées. \n\n *__Permissions requises pour effectuer la commande:__* \n  ${userPerms}`.replace(',', '')));
-  if(!message.guild.me.permissions.has(command.help.botPerms)) return message.channel.send(embedError("Une ou plusieurs permissions manquantes !", `Certaines permissions semblent me manquer. \n\n *__J'ai besoin des permissions:__* \n  ${botPerms}`.replace(',', '')));
+  if(!message.guild.me.permissions.has(command.help.botPerms)) return message.channel.send(embedError("Une ou plusieurs permissions manquantes !", `Certaines permissions semblent me manquer. \n\n *__J'ai besoin des permissions:__* \n  ${botPerms}`.replace(',', '')).replace('Administrator', 'Administrateur'));
 
   Timestamp.set(message.author.id, time);
   setTimeout(() => Timestamp.delete(message.author.id), delay);
@@ -74,7 +72,7 @@ module.exports = async (bot, message) => {
   //delete
   if(command.help.deletecmd === true && message.deletable) message.delete().catch(console.error()) // Si dans le command help on a mis true à delete et que le message est deletable on le delete. Si ça marche po on catch les errors
 
-  function embedMaker (title = "Titre", description = "Quelque chose semble causer problème :thinking:", footer = `Demandée par ${message.author.username}`, color = "1C86D3", image = undefined, thumbnail = undefined) {
+  function embedMaker (title = "Titre", description = "Quelque chose semble causer problème :thinking:", footer = `Demandée par ${message.author.username}`, color = "0x82D4F5", image = undefined, thumbnail = undefined) {
     return new Discord.MessageEmbed()
       .setTitle(title)
       .setColor(color)
@@ -94,5 +92,5 @@ function embedError (title = "<a:CrossCodingHelp:857960524682756116> | Une erreu
       .setTimestamp();
   };
 
-  command.run(bot, message, args, embedMaker, prefix, embedError, convertTtD, upperCaseFirstLettter, settings);
+  command.run(bot, message, args, embedMaker, prefix, embedError, convertTtD, upperCaseFirstLettter);
 }
