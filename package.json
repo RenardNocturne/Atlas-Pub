@@ -9,6 +9,7 @@
   "author": "RenardNocturne",
   "license": "ISC",
   "dependencies": {
+    "discord.js": "^12.5.3",
     "nodemon": "^2.0.9",
     "quick.db": "^7.1.3"
   }
